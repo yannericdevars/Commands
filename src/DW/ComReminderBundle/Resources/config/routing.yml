@@ -1,0 +1,16 @@
+dw_com_reminder_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: DWComReminderBundle:Default:index }
+    
+DWComReminderBundle_remind:
+    resource: "@DWComReminderBundle/Resources/config/routing/remind.yml"
+    prefix:   /remind
+
+DWComReminderBundle_type:
+    resource: "@DWComReminderBundle/Resources/config/routing/type.yml"
+    prefix:   /type
+    
+DWComReminderBundle_category:
+    resource: "@DWComReminderBundle/Resources/config/routing/category.yml"
+    prefix:   /category
+    

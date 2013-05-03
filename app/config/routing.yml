@@ -1,0 +1,5 @@
+dw_com_reminder:
+    resource: "@DWComReminderBundle/Resources/config/routing.yml"
+    prefix:   /
+
+

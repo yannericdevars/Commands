@@ -1,0 +1,30 @@
+remind:
+    pattern:  /
+    defaults: { _controller: "DWComReminderBundle:Remind:index" }
+
+remind_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "DWComReminderBundle:Remind:show" }
+
+remind_new:
+    pattern:  /new
+    defaults: { _controller: "DWComReminderBundle:Remind:new" }
+
+remind_create:
+    pattern:  /create
+    defaults: { _controller: "DWComReminderBundle:Remind:create" }
+    requirements: { _method: post }
+
+remind_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "DWComReminderBundle:Remind:edit" }
+
+remind_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "DWComReminderBundle:Remind:update" }
+    requirements: { _method: post|put }
+
+remind_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "DWComReminderBundle:Remind:delete" }
+    requirements: { _method: post|delete }
