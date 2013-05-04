@@ -5,7 +5,6 @@ namespace DW\ComReminderBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use DW\ComReminderBundle\Entity\Remind;
 
 class MailCommand extends ContainerAwareCommand {
 
@@ -31,7 +30,19 @@ class MailCommand extends ContainerAwareCommand {
 
         $mailer = $container->get('mailer');
 
-        $mailer->send($message);
+        // progessBar
+        
+        $progress = $this->getApplication()->getHelperSet()->get('progress');
+        $progress->start($output, 10);
+        $i = 0;
+        while ($i++ < 10) {
+
+            $mailer->send($message);
+            $progress->advance();
+            
+        }
+
+        $progress->finish();
     }
 
     protected function subjectTest() {
@@ -39,16 +50,18 @@ class MailCommand extends ContainerAwareCommand {
     }
 
     protected function messageTest() {
-          $em = $this->getContainer()->get('doctrine')->getEntityManager(); 
-          
-             $entities = $em->getRepository('DWComReminderBundle:Remind')->findAll();
-             
-             $commandes = "";
-             
-             $commandes .= "<h1>Les commandes : </h1><p>&nbsp;</p>";
-             foreach ($entities as $value) {
-                 $commandes .= $value->getText()."<br/>";
-             }
+
+
+        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+
+        $entities = $em->getRepository('DWComReminderBundle:Remind')->findAll();
+
+        $commandes = "";
+
+        $commandes .= "<h1>Les commandes : </h1><p>&nbsp;</p>";
+        foreach ($entities as $value) {
+            $commandes .= $value->getText() . "<br/>";
+        }
         return $commandes;
     }
 
