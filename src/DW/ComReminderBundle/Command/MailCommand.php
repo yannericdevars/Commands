@@ -12,7 +12,7 @@ class MailCommand extends ContainerAwareCommand {
         $this
                 ->setName('mail:send')
                 ->setDescription('Envoyer un mail')
-        ;
+               ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {

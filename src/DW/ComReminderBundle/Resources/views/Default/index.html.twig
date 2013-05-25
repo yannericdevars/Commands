@@ -1,1 +1,47 @@
-Hello {{ name }}!
+{% extends 'DWComReminderBundle:Layout:base.html.twig' %}
+
+{% block content %}
+
+
+<div id="toggler">
+  <div id="effect" class="ui-widget-content ui-corner-all">
+    <h3 class="ui-widget-header ui-corner-all"><span class="title_tab">Messages de l'administrateur</span></h3>
+    <p>
+        <ul>
+          <li>Message 1</li>
+          <li>Message 2</li>
+          <li>Message 3</li>
+
+        </ul>
+      </p>
+      <p><a href="#" id="button_message" class="ui-state-default ui-corner-all">Messages lus</a></p>
+  </div>
+
+</div>
+<p></p>
+
+
+
+
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">Commandes</a></li>
+    <li><a href="#tabs-2">Catégories</a></li>
+    <li><a href="#tabs-3">Types</a></li>
+
+  </ul>
+  <div id="tabs-1">
+    <p>
+        Les dernières commandes
+
+    </p>
+      </div>
+  <div id="tabs-2">
+      <p>Les catégories</p>
+     </div>
+  <div id="tabs-3">
+  <p>Les types</p>
+  </div>
+</div>
+
+ {% endblock %}
