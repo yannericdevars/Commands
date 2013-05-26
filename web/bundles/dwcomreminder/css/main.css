@@ -1,0 +1,23 @@
+#toggler {
+    width: 100%;
+    height: 200px;
+  }
+  #button_message {
+    padding: .5em 1em;
+    text-decoration: none;
+  }
+  #effect {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 0.4em;
+  }
+  #effect h3 {
+    margin: 0;
+    padding: 0.4em;
+    text-align: center;
+  }
+  .title_tab
+  {
+      color: #2779aa;
+  }
