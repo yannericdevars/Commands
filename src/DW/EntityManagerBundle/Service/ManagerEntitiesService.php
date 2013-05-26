@@ -1,15 +1,19 @@
 <?php
 
-namespace DW\ComReminderBundle\Service;
-  
-class ManagerEntitiesService {
-  
+namespace DW\EntityManagerBundle\Service;
+
+/**
+ * Manager des entites
+ */
+class ManagerEntitiesService
+{
+
   /**
    * Récupère une entité par son id
-   * @param string    $entity     L'entitee
    * @param controler $controller Le controleur
    * @param int       $id         L'identifiant
-   * 
+   * @param string    $repository Nom du repository
+   *
    * @return entite
    */
   public static function getEntity($controller, $id, $repository)
@@ -23,16 +27,15 @@ class ManagerEntitiesService {
 
   /**
    * Recupere des entites selon des criteres
-   * @param string    $entity     Nom de l'entite
    * @param controler $controller Le controler
    * @param array     $criteria   Les criteres
+   * @param string    $repository Nom du repository
    * @param string    $order      Ordre du tri
-   * 
+   *
    * @return array Tableau d'entites
    */
-  public static function getEntitiesByCriterias($entity, $controller, $criteria, $order = null)
+  public static function getEntitiesByCriterias($controller, $criteria, $repository, $order = null)
   {
-    $repository = self::getRepository($entity);
     $em = $controller->getDoctrine()->getManager();
 
     return $em->getRepository($repository)->findBy($criteria, $order);
@@ -40,15 +43,14 @@ class ManagerEntitiesService {
 
   /**
    * Recupere une entite selon un critere
-   * @param string    $entity     Nom de l'entite
    * @param controler $controller Le controler
    * @param array     $criteria   Les criteres
-   * 
+   * @param string    $repository Nom du repository
+   *
    * @return Entity L'entite
    */
-  public static function getEntityByCriterias($entity, $controller, $criteria)
+  public static function getEntityByCriterias($controller, $criteria, $repository)
   {
-    $repository = self::getRepository($entity);
     $em = $controller->getDoctrine()->getManager();
 
     return $em->getRepository($repository)->findOneBy($criteria);
@@ -56,14 +58,13 @@ class ManagerEntitiesService {
 
   /**
    * Recupere toues les entites
-   * @param string    $entity     Le nom de l'entite
    * @param controler $controller Le controler
+   * @param string    $repository Nom du repository
    * 
    * @return Entity L'entite
    */
-  public static function getAllEntities($entity, $controller)
+  public static function getAllEntities($controller, $repository)
   {
-    $repository = self::getRepository($entity);
     $em = $controller->getDoctrine()->getManager();
 
     return $em->getRepository($repository)->findAll();
@@ -71,31 +72,32 @@ class ManagerEntitiesService {
 
   /**
    * Récupère des entitees stockees dans APC
-   * @param Object     $entity     entite
    * @param Controller $controller Un controleur
+   * @param $idAPC     $idAPC      Id dans APC
    * @param int        $timeToLive Le nombre de secondes ou la donnee est stockee
+   * @param string     $repository Nom du repository
    * 
    * @return array les entites
    */
-  public static function getAllEntitiesWithApc($entity, $controller, $timeToLive)
+  public static function getAllEntitiesWithApc($controller, $idAPC, $timeToLive, $repository)
   {
 
-    if (!apc_exists($entity)) {
-      self::writeToApc($entity, $controller, $timeToLive);
+    if (!apc_exists($idAPC)) {
+      self::writeToApc($controller, $idAPC, $timeToLive, $repository);
     }
 
-    return self::readFromApc($entity);
+    return self::readFromApc($idAPC);
   }
 
   /**
    * Ecrit dans le cache apc
-   * @param Object     $entity     entite
    * @param Controller $controller Un controleur
+   * @param $idAPC     $idAPC      Id dans APC
+   * @param string     $repository Nom du repository
    * @param int        $timeToLive Le nombre de secondes ou la donnee est stockee
    */
-  public static function writeToApc($entity, $controller, $timeToLive = 30)
+  public static function writeToApc($controller, $idAPC, $repository, $timeToLive = 30)
   {
-    $repository = self::getRepository($entity);
     $em = $controller->getDoctrine()->getManager();
     $entities = $em->getRepository($repository)->findAll();
     $tabToRecord = array();
@@ -103,18 +105,18 @@ class ManagerEntitiesService {
       $tabToRecord[] = $value->objetCustomSerialize();
     }
 
-    apc_add($entity, $tabToRecord, $timeToLive);
+    apc_add($idAPC, $tabToRecord, $timeToLive);
   }
 
   /**
    * Recupere un tableau d'entites
-   * @param Array $entity l'entite
-   * 
+   * @param $idAPC $idAPC Id dans APC
+   *
    * @return array tableau d'entite
    */
-  public static function readFromApc($entity)
+  public static function readFromApc($idAPC)
   {
-    return apc_fetch($entity);
+    return apc_fetch($idAPC);
   }
 
   /**
@@ -142,32 +144,11 @@ class ManagerEntitiesService {
   }
 
   /**
-   * Recupere un repository avec son entite
-   * @param Entity $entity l'entite
-   * 
-   * @return Repository Le repository
-   */
-  public static function getRepository($entity)
-  {
-
-
-    $repository = 'Not defined';
-
-    if ($entity == 'User') {
-      $repository = 'HubeeUserBundle:' . $entity;
-    } else {
-      $repository = 'HubeeCanalPlayBundle:' . $entity;
-    }
-
-    return $repository;
-  }
-
-  /**
    * Permet de faire une requete DQL
    * @param controler     $controller Le controleur
    * @param string        $strQuery   La chaine de requete
    * @param EntityManager $em         Un entity manager peut être precise
-   * 
+   *
    * @return Tableau d'objets
    */
   public static function selectByDQL($controller, $strQuery, $em = null)
@@ -181,21 +162,4 @@ class ManagerEntitiesService {
     return $query->getResult();
   }
 
-  /**
-   * @param string $key      La clef dans le Json
-   * @param string $url      L'url interrogee
-   * @param string $body     Le corps du Json
-   * @param int    $lifeTime Temps de mise en cache en secondes
-   * 
-   * @return json
-   */
-  public static function getJsonFromApc($key, $url, $body, $lifeTime = 20)
-  {
-    if (!apc_exists($key)) {
-      $data = AtgService::getJsonListeAtg($url, $body);
-      apc_add($key, $data, $lifeTime);
-    }
-
-    return apc_fetch($key);
-  }
 }

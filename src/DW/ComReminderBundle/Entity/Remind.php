@@ -16,7 +16,18 @@ use Doctrine\ORM\Mapping\ManyToOne;
 class Remind
 {
     
-    
+    public function objetCustomSerialize() {
+      return array (
+          'id' => utf8_encode($this->getId()),
+          'name' => utf8_encode($this->getName()),
+          'text' => utf8_encode($this->getText()),
+          'comment' => utf8_encode($this->getComment()),
+          'type' => utf8_encode($this->getType()),
+          'category' => utf8_encode($this->getCategory()),
+          'number' => utf8_encode($this->getNumber()),
+          'rate' => utf8_encode($this->getRate()),
+          );
+    }
     /**
      * @ManyToOne(targetEntity="Type")
      * @JoinColumn(name="type_id", referencedColumnName="id")

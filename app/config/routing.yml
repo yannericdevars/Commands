@@ -1,3 +1,7 @@
+dw_entity_manager:
+    resource: "@DWEntityManagerBundle/Resources/config/routing.yml"
+    prefix:   /
+
 dw_com_reminder:
     resource: "@DWComReminderBundle/Resources/config/routing.yml"
     prefix:   /
